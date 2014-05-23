@@ -8,7 +8,7 @@ Author: Jos&eacute; P. Airosa
 Version: 0.1
 Author URI: http://www.joseairosa.com/
 
-Copyright 2010  José P. Airosa  (email : me@joseairosa.com)
+Copyright 2010  Josï¿½ P. Airosa  (email : me@joseairosa.com)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as 
@@ -27,6 +27,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 @session_start();
 
 global $wpdb;
+
+//========================================
+// Load WP-RESTful functions
+//========================================
+require_once WP_PLUGIN_DIR."/wp-restful/wp-restful.php";
 
 //========================================
 // Plugin Settings
@@ -66,7 +71,7 @@ function wpr_users_install() {
 	if(!is_array($wpr_plugins))
 		$wpr_plugins = array(); 
 	// Add our plugin as active
-	$wpr_plugins['users'] = "wp-restful-users";
+	$wpr_plugins['users'] = "wp-restful-users-plugin";
 	update_option("wpr_plugins",$wpr_plugins);
 }
 function wpr_users_uninstall() {
@@ -74,7 +79,7 @@ function wpr_users_uninstall() {
 	if(!is_array($wpr_plugins))
 		$wpr_plugins = array(); 
 	// Remove this plugin as active
-	$wpr_active_plugins = array_diff($wpr_plugins,array("wp-restful-users"));
+	$wpr_active_plugins = array_diff($wpr_plugins,array("wp-restful-users-plugin"));
 	update_option("wpr_plugins",$wpr_active_plugins);
 }
 
@@ -176,8 +181,8 @@ wpr_add_plugin('wpr_users_fields');
 // Set action hooks
 //========================================
 add_action('wp_logout',"wpr_user_logout");
-add_action('activate_'.plugin_basename(__FILE__), 'wpr_users_install');
-add_action('deactivate_'.plugin_basename(__FILE__), 'wpr_users_uninstall');
+register_activation_hook(WP_PLUGIN_DIR.'/wp-restful-users-plugin/wp-restful-users.php', 'wpr_users_install');
+register_deactivation_hook(WP_PLUGIN_DIR.'/wp-restful-users-plugin/wp-restful-users.php', 'wpr_users_uninstall');
 
 //========================================
 // Set filter hooks
